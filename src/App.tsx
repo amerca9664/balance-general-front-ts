@@ -1,5 +1,12 @@
+import { Login } from "./modules/auth/components/Login";
+
 function App() {
-	return <span className="text-red-300 text-9xl">hola</span>;
+	<div className="bg-gray-800 h-screen w-screen"></div>;
+	return (
+		<div className="bg-gray-800 h-screen w-screen">
+			<Login />
+		</div>
+	);
 }
 
 export default App;
