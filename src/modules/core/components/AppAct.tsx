@@ -11,7 +11,7 @@ export const AppAct = ({ children }: { children: React.ReactNode }) => {
 		} else {
 			navigate("/balancegeneral");
 		}
-	}, [auth?.auth]);
+	}, [auth?.auth, navigate]);
 
 	return <>{children}</>;
 };

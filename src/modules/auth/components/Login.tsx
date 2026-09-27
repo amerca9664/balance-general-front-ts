@@ -1,10 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
+import { useAuth } from "../../core/components/AuthProvider";
 import { GeneralButton } from "../../core/components/GeneralButton";
 import { GeneralInputText } from "../../core/components/GeneralInputText";
 import { apiLogin } from "../apis/loginApi";
 import type { LoginParams } from "../types/authTypes";
-import { useNavigate } from "react-router";
-import { useAuth } from "../../core/components/AuthProvider";
 
 export const Login = () => {
 	const [inputUserState, setInputUserState] = useState("");
