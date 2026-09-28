@@ -1,14 +1,10 @@
 import type { ReactNode } from "react";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { refreshTokenApi } from "../apis/refreshTokenApi";
 import { useLocalStorage } from "../hooks/useLocalStorage";
-import type {
-	AuthContextValue,
-	AuthData,
-	useIntervalRt,
-} from "../types/authContextTypes";
 import { useRefreshTokenInterval } from "../hooks/useRefreshTokenInterval";
+import type { AuthContextValue, AuthData } from "../types/authContextTypes";
 
 // 1. createContext necesita valor inicial + tipo explícito.
 // Con `| null` obligas a usar el Provider y el tipo de `value` queda fijo.
@@ -27,20 +23,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		if (token) {
 			setValue({ auth: true });
 			setToken(token);
-			navigate("/balancegeneral");
 		} else {
 			setValue({ auth: false });
 			setToken(null);
-			navigate("/login");
 		}
 	};
 
 	const removeAuth = () => {
 		removeValue();
+		setToken(null);
 		navigate("/login");
 	};
 
 	const refreshToken = async () => {
+		console.log(auth?.auth);
 		if (!auth?.auth) {
 			navigate("/login");
 			return;
@@ -49,7 +45,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 			const tokenResponse = await refreshTokenApi();
 			updAuth({ token: tokenResponse.token });
 		} catch {
-			updAuth({ token: null });
+			removeAuth();
 		}
 	};
 

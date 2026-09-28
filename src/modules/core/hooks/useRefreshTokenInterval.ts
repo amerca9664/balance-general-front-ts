@@ -1,17 +1,34 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import type { useIntervalRt } from "../types/authContextTypes";
 
-export const useRefreshTokenInterval = ({ refreshToken }: useIntervalRt) => {
-	useEffect(() => {
-		refreshToken();
-		// Ejecutar cada 5 minutos
-		const interval = setInterval(() => {
-			refreshToken();
-		}, 10000);
+const REFRESH_INTERVAL = 5 * 60 * 1000;
 
-		// Limpiar el intervalo al desmontar
+export const useRefreshTokenInterval = ({ refreshToken }: useIntervalRt) => {
+	const refreshTokenRef = useRef(refreshToken);
+
+	useEffect(() => {
+		refreshTokenRef.current = refreshToken;
+	}, [refreshToken]);
+
+	useEffect(() => {
+		let timeout: ReturnType<typeof setTimeout>;
+		let cancelled = false;
+
+		const refresh = async () => {
+			try {
+				await refreshTokenRef.current();
+			} finally {
+				if (!cancelled) {
+					timeout = setTimeout(refresh, REFRESH_INTERVAL);
+				}
+			}
+		};
+
+		refresh();
+
 		return () => {
-			clearInterval(interval);
+			cancelled = true;
+			clearTimeout(timeout);
 		};
 	}, []);
 };

@@ -7,9 +7,9 @@ export const BalanceGeneral = () => {
 
 	const handleLogOut = async () => {
 		try {
-			const responseLoggut = await logOutApi();
+			await logOutApi();
 			removeAuth();
-		} catch (error) {
+		} catch {
 			console.log("aaaaaaaaa");
 		}
 	};
