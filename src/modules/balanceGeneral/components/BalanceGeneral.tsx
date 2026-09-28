@@ -1,16 +1,14 @@
-import { useNavigate } from "react-router";
 import { logOutApi } from "../../core/apis/logOutApi";
 import { useAuth } from "../../core/components/AuthProvider";
 import { GeneralButton } from "../../core/components/GeneralButton";
 
 export const BalanceGeneral = () => {
 	const { removeAuth } = useAuth();
-	const navigate = useNavigate();
+
 	const handleLogOut = async () => {
 		try {
 			const responseLoggut = await logOutApi();
 			removeAuth();
-			navigate("/login");
 		} catch (error) {
 			console.log("aaaaaaaaa");
 		}

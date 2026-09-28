@@ -6,3 +6,6 @@ export type AuthContextValue = {
 	token: string | null;
 	updAuth: ({ token }: { token: string | null }) => void;
 };
+export type useIntervalRt = {
+	refreshToken: () => void;
+};

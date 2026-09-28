@@ -16,8 +16,8 @@ export const Login = () => {
 		try {
 			const response = await apiLogin({ email, password });
 
-			updAuth({ token: response.token });
 			if (response.success) {
+				updAuth({ token: response.token });
 				console.log("Login successful:", response);
 				// Redirigir a la página de balance general
 				navigate("/balancegeneral");
