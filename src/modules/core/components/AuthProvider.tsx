@@ -23,6 +23,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		if (token) {
 			setValue({ auth: true });
 			setToken(token);
+			// Redirigir a la página de balance general
+			navigate("/balancegeneral");
 		} else {
 			setValue({ auth: false });
 			setToken(null);

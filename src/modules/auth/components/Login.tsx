@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
+
 import { useAuth } from "../../core/components/AuthProvider";
 import { GeneralButton } from "../../core/components/GeneralButton";
 import { GeneralInputText } from "../../core/components/GeneralInputText";
@@ -11,7 +11,6 @@ export const Login = () => {
 	const [passwordState, setPasswordState] = useState("");
 	const { updAuth } = useAuth();
 
-	const navigate = useNavigate();
 	const loginHandler = async ({ email, password }: LoginParams) => {
 		try {
 			const response = await apiLogin({ email, password });
@@ -19,8 +18,6 @@ export const Login = () => {
 			if (response.success) {
 				updAuth({ token: response.token });
 				console.log("Login successful:", response);
-				// Redirigir a la página de balance general
-				navigate("/balancegeneral");
 			}
 		} catch (error) {
 			console.error("Error during login:", error);
