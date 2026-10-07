@@ -37,17 +37,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		navigate("/login");
 	};
 
-	const refreshToken = async () => {
+	const refreshToken = async (): Promise<string | null> => {
 		console.log(auth?.auth);
 		if (!auth?.auth) {
 			navigate("/login");
-			return;
+			return null;
 		}
 		try {
 			const tokenResponse = await refreshTokenApi();
 			updAuth({ token: tokenResponse.token });
+			return tokenResponse.token;
 		} catch {
 			removeAuth();
+			return null;
 		}
 	};
 

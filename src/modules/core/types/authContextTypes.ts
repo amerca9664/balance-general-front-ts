@@ -7,5 +7,7 @@ export type AuthContextValue = {
 	updAuth: ({ token }: { token: string | null }) => void;
 };
 export type useIntervalRt = {
-	refreshToken: () => void;
+	// Devuelve el access token recien emitido (o null si el refresh fallo):
+	// de ahi sale el `exp` con el que el hook agenda el proximo tick.
+	refreshToken: () => Promise<string | null>;
 };
