@@ -32,6 +32,7 @@ const readExpMs = (token: string | null): number | null => {
 		const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
 		const padded = base64 + "=".repeat((4 - (base64.length % 4)) % 4);
 		const decoded = JSON.parse(atob(padded)) as { exp?: unknown };
+		console.log("decoded", decoded);
 
 		return typeof decoded.exp === "number" ? decoded.exp * 1000 : null;
 	} catch {
