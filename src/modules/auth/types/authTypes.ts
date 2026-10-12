@@ -1,6 +1,7 @@
 export type LoginParams = {
 	email: string;
 	password: string;
+	"cf-turnstile-response"?: string;
 };
 
 export type LoginResponse = {
