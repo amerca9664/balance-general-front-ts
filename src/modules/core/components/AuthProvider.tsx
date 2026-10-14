@@ -38,7 +38,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	};
 
 	const refreshToken = async (): Promise<string | null> => {
-		console.log(auth?.auth);
 		if (!auth?.auth) {
 			navigate("/login");
 			return null;

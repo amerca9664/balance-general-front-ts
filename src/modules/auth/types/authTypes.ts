@@ -8,6 +8,7 @@ export type LoginResponse = {
 	success: boolean;
 	message: string;
 	token: string;
+	username: string;
 };
 
 // El back en refresh devuelve { roles, accessToken }.
