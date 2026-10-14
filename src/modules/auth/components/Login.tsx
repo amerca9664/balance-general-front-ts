@@ -8,7 +8,7 @@ import { GeneralInputText } from "../../core/components/GeneralInputText";
 import { apiLogin } from "../apis/loginApi";
 import type { LoginParams } from "../types/authTypes";
 import { Floating3DParticles } from "../../core/components/Floating-3d-particles";
-import { sileo, Toaster } from "sileo";
+import { sileo } from "sileo";
 import axios from "axios";
 
 const turnstileEnabled = process.env.NODE_ENV === "production";
