@@ -5,6 +5,7 @@ import { refreshTokenApi } from "../apis/refreshTokenApi";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useRefreshTokenInterval } from "../hooks/useRefreshTokenInterval";
 import type { AuthContextValue, AuthData } from "../types/authContextTypes";
+import axios from "axios";
 
 // 1. createContext necesita valor inicial + tipo explícito.
 // Con `| null` obligas a usar el Provider y el tipo de `value` queda fijo.
@@ -47,9 +48,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 			updAuth({ token: tokenResponse.token });
 			return tokenResponse.token;
 		} catch (error) {
-			if (error instanceof Error) {
-				console.error("Error al refrescar el token:", error.message);
-				return null;
+			if (axios.isAxiosError(error)) {
+				if (error.response?.status === 429) {
+					console.error("Demasiadas solicitudes. Intenta más tarde.");
+
+					// Aquí puedes devolver null, reintentar o lanzar un error personalizado
+					return null;
+				}
 			}
 			removeAuth();
 			return null;
