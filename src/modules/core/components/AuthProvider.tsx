@@ -46,7 +46,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 			const tokenResponse = await refreshTokenApi();
 			updAuth({ token: tokenResponse.token });
 			return tokenResponse.token;
-		} catch {
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error("Error al refrescar el token:", error.message);
+				return null;
+			}
 			removeAuth();
 			return null;
 		}
