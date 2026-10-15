@@ -48,14 +48,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 			updAuth({ token: tokenResponse.token });
 			return tokenResponse.token;
 		} catch (error) {
-			if (axios.isAxiosError(error)) {
-				if (error.response?.status === 429) {
-					console.error("Demasiadas solicitudes. Intenta más tarde.");
+			console.log("error:", error);
+			console.log("axios:", axios.isAxiosError(error));
 
-					// Aquí puedes devolver null, reintentar o lanzar un error personalizado
+			if (axios.isAxiosError(error)) {
+				console.log("status:", error.response?.status);
+
+				if (error.response?.status === 429) {
+					console.log("429 detectado");
 					return null;
 				}
 			}
+
 			removeAuth();
 			return null;
 		}
