@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 				}
 
 				// Token inválido
-				if (error.response.status === 401) {
+				if (error.response.status === 401 || error.response.status === 403) {
 					removeAuth();
 					return null;
 				}
