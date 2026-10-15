@@ -48,19 +48,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 			updAuth({ token: tokenResponse.token });
 			return tokenResponse.token;
 		} catch (error) {
-			console.log("error:", error);
-			console.log("axios:", axios.isAxiosError(error));
-
 			if (axios.isAxiosError(error)) {
-				console.log("status:", error.response?.status);
+				// 429 Cloudflare / CORS
+				if (!error.response) {
+					return null;
+				}
 
-				if (error.response?.status === 429) {
-					console.log("429 detectado");
+				// Error temporal
+				if (error.response.status === 429) {
+					return null;
+				}
+
+				// Token inválido
+				if (error.response.status === 401) {
+					removeAuth();
 					return null;
 				}
 			}
 
-			removeAuth();
 			return null;
 		}
 	};
