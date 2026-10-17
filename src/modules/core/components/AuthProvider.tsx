@@ -1,4 +1,3 @@
-import axios from "axios";
 import type { ReactNode } from "react";
 import { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router";
@@ -6,17 +5,11 @@ import { refreshTokenApi } from "../apis/refreshTokenApi";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useRefreshTokenInterval } from "../hooks/useRefreshTokenInterval";
 import type { AuthContextValue, AuthData } from "../types/authContextTypes";
+import axios from "axios";
 
 // 1. createContext necesita valor inicial + tipo explícito.
 // Con `| null` obligas a usar el Provider y el tipo de `value` queda fijo.
 export const AuthContext = createContext<AuthContextValue | null>(null);
-
-// Un 409 significa que OTRA request del mismo cliente esta rotando el refresh
-// token en este momento (doble pestaña, o su propio intervalo): el token viejo
-// sigue siendo valido hasta que esa rotacion gane. Se reintenta con backoff
-// corto en vez de caer al fallback largo del intervalo, que dejaria la app con
-// el access token vencido hasta el proximo tick.
-const REFRESH_409_RETRY_DELAYS_MS = [1000, 2000];
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const {
@@ -50,40 +43,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 			navigate("/login");
 			return null;
 		}
-
-		for (let attempt = 0; ; attempt++) {
-			try {
-				const tokenResponse = await refreshTokenApi();
-				updAuth({ token: tokenResponse.token });
-				return tokenResponse.token;
-			} catch (error) {
-				if (axios.isAxiosError(error)) {
-					// 429 Cloudflare / CORS
-					if (!error.response) {
-						return null;
-					}
-
-					// Error temporal
-					if (error.response.status === 429) {
-						return null;
-					}
-
-					// Token inválido
-					if (error.response.status === 401 || error.response.status === 403) {
-						removeAuth();
-						return null;
-					}
-
-					// Rotación en curso ajena: reintentar.
-					const retryDelay = REFRESH_409_RETRY_DELAYS_MS[attempt];
-					if (error.response.status === 409 && retryDelay !== undefined) {
-						await new Promise((resolve) => setTimeout(resolve, retryDelay));
-						continue;
-					}
+		try {
+			const tokenResponse = await refreshTokenApi();
+			updAuth({ token: tokenResponse.token });
+			return tokenResponse.token;
+		} catch (error) {
+			if (axios.isAxiosError(error)) {
+				// 429 Cloudflare / CORS
+				if (!error.response) {
+					return null;
 				}
 
-				return null;
+				// Error temporal
+				if (error.response.status === 429) {
+					return null;
+				}
+
+				// Token inválido
+				if (error.response.status === 401 || error.response.status === 403) {
+					removeAuth();
+					return null;
+				}
 			}
+
+			return null;
 		}
 	};
 
