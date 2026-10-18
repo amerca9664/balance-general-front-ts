@@ -7,6 +7,7 @@ export const apiLogin = async ({
 	email,
 	password,
 	"cf-turnstile-response": turnstileResponse,
+	idempotencyKey,
 }: LoginParams): Promise<LoginResponse> => {
 	const response = await axios.post<LoginResponse>(
 		`${API_BACK}/auth/login`,
@@ -16,6 +17,7 @@ export const apiLogin = async ({
 			...(turnstileResponse
 				? { "cf-turnstile-response": turnstileResponse }
 				: {}),
+			idempotencyKey,
 		},
 		{ withCredentials: true },
 	);

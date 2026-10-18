@@ -20,11 +20,17 @@ export const Login = () => {
 	const [turnstileToken, setTurnstileToken] = useState("");
 	const turnstileRef = useRef<TurnstileInstance | null>(null);
 	const { updAuth } = useAuth();
-
+	const idempotencyKey = useRef<string | null>(null);
 	const loginHandler = async ({
 		email,
 		password,
-	}: Omit<LoginParams, "cf-turnstile-response">) => {
+	}: Omit<{ email: string; password: string }, "cf-turnstile-response">) => {
+		if (!idempotencyKey.current) {
+			idempotencyKey.current = crypto.randomUUID();
+			setTimeout(() => {
+				idempotencyKey.current = null;
+			}, 10 * 1000);
+		}
 		setIsPending(true);
 		try {
 			await sileo.promise(
@@ -34,6 +40,7 @@ export const Login = () => {
 					"cf-turnstile-response": turnstileEnabled
 						? turnstileToken
 						: undefined,
+					idempotencyKey: idempotencyKey.current,
 				}),
 				{
 					loading: {

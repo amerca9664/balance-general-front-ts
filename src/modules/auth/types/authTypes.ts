@@ -2,6 +2,7 @@ export type LoginParams = {
 	email: string;
 	password: string;
 	"cf-turnstile-response"?: string;
+	idempotencyKey: string;
 };
 
 export type LoginResponse = {
