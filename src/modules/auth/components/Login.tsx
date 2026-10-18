@@ -1,6 +1,6 @@
 import type { TurnstileInstance } from "@marsidev/react-turnstile";
 import { Turnstile } from "@marsidev/react-turnstile";
-import { useRef, useState, useTransition } from "react";
+import { useRef, useState } from "react";
 
 import { useAuth } from "../../core/components/AuthProvider";
 import { GeneralButton } from "../../core/components/GeneralButton";
@@ -14,7 +14,7 @@ import axios from "axios";
 const turnstileEnabled = process.env.NODE_ENV === "production";
 
 export const Login = () => {
-	const [isPending, startTransition] = useTransition();
+	const [isPending, setIsPending] = useState(false);
 	const [inputUserState, setInputUserState] = useState("");
 	const [passwordState, setPasswordState] = useState("");
 	const [turnstileToken, setTurnstileToken] = useState("");
@@ -25,45 +25,45 @@ export const Login = () => {
 		email,
 		password,
 	}: Omit<LoginParams, "cf-turnstile-response">) => {
-		startTransition(async () => {
-			try {
-				await sileo.promise(
-					apiLogin({
-						email,
-						password,
-						"cf-turnstile-response": turnstileEnabled
-							? turnstileToken
-							: undefined,
-					}),
-					{
-						loading: {
-							title: "Iniciando sesión",
-							description: "Verificando tus credenciales...",
-						},
-						success: (response) => {
-							updAuth({ token: response.token });
-
-							return {
-								title: "Inicio de sesión exitoso",
-								description: `Bienvenido, ${response.username}`,
-							};
-						},
-						error: (error: unknown) => ({
-							title: "Error al iniciar sesión",
-							description: axios.isAxiosError(error)
-								? (error.response?.data?.message ??
-									"No fue posible conectar con el servidor")
-								: "Ocurrió un error inesperado",
-						}),
+		setIsPending(true);
+		try {
+			await sileo.promise(
+				apiLogin({
+					email,
+					password,
+					"cf-turnstile-response": turnstileEnabled
+						? turnstileToken
+						: undefined,
+				}),
+				{
+					loading: {
+						title: "Iniciando sesión",
+						description: "Verificando tus credenciales...",
 					},
-				);
-			} catch (error) {
-				console.error("Error durante el inicio de sesión:", error);
-			} finally {
-				turnstileRef.current?.reset();
-				setTurnstileToken("");
-			}
-		});
+					success: (response) => {
+						updAuth({ token: response.token });
+
+						return {
+							title: "Inicio de sesión exitoso",
+							description: `Bienvenido, ${response.username}`,
+						};
+					},
+					error: (error: unknown) => ({
+						title: "Error al iniciar sesión",
+						description: axios.isAxiosError(error)
+							? (error.response?.data?.message ??
+								"No fue posible conectar con el servidor")
+							: "Ocurrió un error inesperado",
+					}),
+				},
+			);
+		} catch (error) {
+			console.error("Error durante el inicio de sesión:", error);
+		} finally {
+			turnstileRef.current?.reset();
+			setTurnstileToken("");
+			setIsPending(false);
+		}
 	};
 
 	return (
