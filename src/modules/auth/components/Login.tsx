@@ -6,10 +6,11 @@ import { useAuth } from "../../core/components/AuthProvider";
 import { GeneralButton } from "../../core/components/GeneralButton";
 import { GeneralInputText } from "../../core/components/GeneralInputText";
 import { apiLogin } from "../apis/loginApi";
-import type { LoginParams } from "../types/authTypes";
+
 import { Floating3DParticles } from "../../core/components/Floating-3d-particles";
 import { sileo } from "sileo";
 import axios from "axios";
+import { useIdempotecyKeyGenonName } from "../hooks/useIdempotecyKeyGen";
 
 const turnstileEnabled = process.env.NODE_ENV === "production";
 
@@ -20,18 +21,15 @@ export const Login = () => {
 	const [turnstileToken, setTurnstileToken] = useState("");
 	const turnstileRef = useRef<TurnstileInstance | null>(null);
 	const { updAuth } = useAuth();
-	const idempotencyKey = useRef<string | null>(null);
+	const { generateIdempotencyKey, idempotencyKey, resetIdempotencyKey } =
+		useIdempotecyKeyGenonName();
+
 	const loginHandler = async ({
 		email,
 		password,
 	}: Omit<{ email: string; password: string }, "cf-turnstile-response">) => {
-		if (!idempotencyKey.current) {
-			idempotencyKey.current = crypto.randomUUID();
-			setTimeout(() => {
-				idempotencyKey.current = null;
-			}, 10 * 1000);
-		}
 		setIsPending(true);
+		generateIdempotencyKey();
 		try {
 			await sileo.promise(
 				apiLogin({
@@ -40,7 +38,7 @@ export const Login = () => {
 					"cf-turnstile-response": turnstileEnabled
 						? turnstileToken
 						: undefined,
-					idempotencyKey: idempotencyKey.current,
+					idempotencyKey: idempotencyKey.current ?? "",
 				}),
 				{
 					loading: {
@@ -55,13 +53,19 @@ export const Login = () => {
 							description: `Bienvenido, ${response.username}`,
 						};
 					},
-					error: (error: unknown) => ({
-						title: "Error al iniciar sesión",
-						description: axios.isAxiosError(error)
-							? (error.response?.data?.message ??
-								"No fue posible conectar con el servidor")
-							: "Ocurrió un error inesperado",
-					}),
+					error: (error: unknown) => {
+						if (axios.isAxiosError(error) && error.response?.status === 401) {
+							resetIdempotencyKey();
+						}
+
+						return {
+							title: "Error al iniciar sesión",
+							description: axios.isAxiosError(error)
+								? (error.response?.data?.message ??
+									"No fue posible conectar con el servidor")
+								: "Ocurrió un error inesperado",
+						};
+					},
 				},
 			);
 		} catch (error) {
@@ -69,6 +73,7 @@ export const Login = () => {
 		} finally {
 			turnstileRef.current?.reset();
 			setTurnstileToken("");
+
 			setIsPending(false);
 		}
 	};
