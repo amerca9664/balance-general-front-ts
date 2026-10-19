@@ -1,33 +1,44 @@
+import axios from "axios";
 import { sileo } from "sileo";
-import { logOutApi } from "../../core/apis/logOutApi";
 import { useAuth } from "../../core/components/AuthProvider";
 import { GeneralButton } from "../../core/components/GeneralButton";
-import axios from "axios";
+import { logOutWithRetry } from "../../core/helpers/pendingLogout";
 
 export const BalanceGeneral = () => {
 	const { removeAuth } = useAuth();
 
 	const handleLogOut = async () => {
-		await sileo.promise(logOutApi(), {
-			loading: {
-				title: "Cerrando sesión",
-				description: "Cerrando tu sesión...",
-			},
-			success: () => {
-				removeAuth();
-				return {
-					title: "Cerraste sesión exitosamente",
-					description: "Hasta luego",
-				};
-			},
-			error: (error: unknown) => ({
-				title: "Error al cerrar sesión",
-				description: axios.isAxiosError(error)
-					? (error.response?.data?.message ??
-						"No fue posible conectar con el servidor")
-					: "Ocurrió un error inesperado",
-			}),
-		});
+		try {
+			await sileo.promise(logOutWithRetry(), {
+				loading: {
+					title: "Cerrando sesión",
+					description: "Cerrando tu sesión...",
+				},
+				success: (result) =>
+					result === "pending"
+						? {
+								title: "Sesión cerrada en este dispositivo",
+								description:
+									"Sin conexión: se terminará de cerrar al recuperar internet",
+							}
+						: {
+								title: "Cerraste sesión exitosamente",
+								description: "Hasta luego",
+							},
+				error: (error: unknown) => ({
+					title: "Error al cerrar sesión",
+					description: axios.isAxiosError(error)
+						? (error.response?.data?.message ??
+							"No fue posible conectar con el servidor")
+						: "Ocurrió un error inesperado",
+				}),
+			});
+		} catch (error) {
+			console.error("Error durante el cierre de sesión:", error);
+		} finally {
+			// La UI cierra sesion siempre, haya o no respuesta del back.
+			removeAuth();
+		}
 	};
 
 	return (

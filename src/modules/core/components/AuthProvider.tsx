@@ -1,11 +1,16 @@
+import axios from "axios";
 import type { ReactNode } from "react";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { refreshTokenApi } from "../apis/refreshTokenApi";
+import {
+	clearPendingLogout,
+	flushPendingLogout,
+	hasPendingLogout,
+} from "../helpers/pendingLogout";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useRefreshTokenInterval } from "../hooks/useRefreshTokenInterval";
 import type { AuthContextValue, AuthData } from "../types/authContextTypes";
-import axios from "axios";
 
 // 1. createContext necesita valor inicial + tipo explícito.
 // Con `| null` obligas a usar el Provider y el tipo de `value` queda fijo.
@@ -22,6 +27,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const [token, setToken] = useState<string | null>(null);
 	const updAuth = ({ token }: { token: string | null }) => {
 		if (token) {
+			clearPendingLogout();
 			setValue({ auth: true });
 			setToken(token);
 			// Redirigir a la página de balance general
@@ -41,6 +47,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const refreshToken = async (): Promise<string | null> => {
 		if (!auth?.auth) {
 			navigate("/login");
+			return null;
+		}
+		// Hay un logout que no llego al back: un refresh reviviria esa sesion.
+		if (hasPendingLogout()) {
+			await flushPendingLogout();
+			removeAuth();
 			return null;
 		}
 		try {
@@ -71,6 +83,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	};
 
 	useRefreshTokenInterval({ refreshToken });
+
+	// Logout pendiente: se reintenta al abrir la app y cada vez que vuelve la red.
+	useEffect(() => {
+		const flush = () => {
+			void flushPendingLogout();
+		};
+		flush();
+		window.addEventListener("online", flush);
+		return () => window.removeEventListener("online", flush);
+	}, []);
 
 	// 2. Este objeto ahora sí coincide con AuthContextValue,
 	// por eso el `value` ya no da error de tipos.
