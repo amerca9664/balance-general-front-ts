@@ -1,15 +1,14 @@
 import type { TurnstileInstance } from "@marsidev/react-turnstile";
 import { Turnstile } from "@marsidev/react-turnstile";
+import axios from "axios";
 import { useRef, useState } from "react";
-
+import { sileo } from "sileo";
 import { useAuth } from "../../core/components/AuthProvider";
+import { Floating3DParticles } from "../../core/components/Floating-3d-particles";
 import { GeneralButton } from "../../core/components/GeneralButton";
 import { GeneralInputText } from "../../core/components/GeneralInputText";
+import { useTranslation } from "../../core/components/LanguageProvider";
 import { apiLogin } from "../apis/loginApi";
-
-import { Floating3DParticles } from "../../core/components/Floating-3d-particles";
-import { sileo } from "sileo";
-import axios from "axios";
 import { useIdempotecyKeyGenonName } from "../hooks/useIdempotecyKeyGen";
 
 const turnstileEnabled = process.env.NODE_ENV === "production";
@@ -21,6 +20,7 @@ export const Login = () => {
 	const [turnstileToken, setTurnstileToken] = useState("");
 	const turnstileRef = useRef<TurnstileInstance | null>(null);
 	const { updAuth } = useAuth();
+	const { t } = useTranslation();
 	const { generateIdempotencyKey, idempotencyKey, resetIdempotencyKey } =
 		useIdempotecyKeyGenonName();
 
@@ -42,15 +42,18 @@ export const Login = () => {
 				}),
 				{
 					loading: {
-						title: "Iniciando sesión",
-						description: "Verificando tus credenciales...",
+						title: t.login.loadingTitle,
+						description: t.login.loadingDescription,
 					},
 					success: (response) => {
 						updAuth({ token: response.token });
 
 						return {
-							title: "Inicio de sesión exitoso",
-							description: `Bienvenido, ${response.username}`,
+							title: t.login.successTitle,
+							description: t.login.welcome.replace(
+								"{username}",
+								response.username,
+							),
 						};
 					},
 					error: (error: unknown) => {
@@ -59,11 +62,10 @@ export const Login = () => {
 						}
 
 						return {
-							title: "Error al iniciar sesión",
+							title: t.login.errorTitle,
 							description: axios.isAxiosError(error)
-								? (error.response?.data?.message ??
-									"No fue posible conectar con el servidor")
-								: "Ocurrió un error inesperado",
+								? (error.response?.data?.message ?? t.errors.noConnection)
+								: t.errors.unexpected,
 						};
 					},
 				},
@@ -85,13 +87,13 @@ export const Login = () => {
 				typeInput="text"
 				valueText={inputUserState}
 				onChangeText={setInputUserState}
-				placeholderText="Enter your username"
+				placeholderText={t.login.usernamePlaceholder}
 			/>
 			<GeneralInputText
 				typeInput="password"
 				valueText={passwordState}
 				onChangeText={setPasswordState}
-				placeholderText="Enter your password"
+				placeholderText={t.login.passwordPlaceholder}
 			/>
 			{turnstileEnabled && (
 				<Turnstile
@@ -105,7 +107,7 @@ export const Login = () => {
 			)}
 			<GeneralButton
 				typeButton="button"
-				textName="Iniciar sesión"
+				textName={t.login.submit}
 				disabled={(turnstileEnabled && !turnstileToken) || isPending}
 				onClickButton={() => {
 					loginHandler({ email: inputUserState, password: passwordState });

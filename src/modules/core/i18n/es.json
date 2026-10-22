@@ -1,0 +1,32 @@
+{
+	"language": {
+		"name": "Español",
+		"label": "Idioma"
+	},
+	"login": {
+		"usernamePlaceholder": "Ingresa tu usuario",
+		"passwordPlaceholder": "Ingresa tu contraseña",
+		"submit": "Iniciar sesión",
+		"loadingTitle": "Iniciando sesión",
+		"loadingDescription": "Verificando tus credenciales...",
+		"successTitle": "Inicio de sesión exitoso",
+		"welcome": "Bienvenido, {username}",
+		"errorTitle": "Error al iniciar sesión"
+	},
+	"balance": {
+		"title": "Balance General",
+		"description": "Este es el componente BalanceGeneral.",
+		"logout": "Cerrar sesión",
+		"loadingTitle": "Cerrando sesión",
+		"loadingDescription": "Cerrando tu sesión...",
+		"pendingTitle": "Sesión cerrada en este dispositivo",
+		"pendingDescription": "Sin conexión: se terminará de cerrar al recuperar internet",
+		"successTitle": "Cerraste sesión exitosamente",
+		"successDescription": "Hasta luego",
+		"errorTitle": "Error al cerrar sesión"
+	},
+	"errors": {
+		"noConnection": "No fue posible conectar con el servidor",
+		"unexpected": "Ocurrió un error inesperado"
+	}
+}

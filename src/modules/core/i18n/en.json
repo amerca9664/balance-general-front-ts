@@ -1,0 +1,32 @@
+{
+	"language": {
+		"name": "English",
+		"label": "Language"
+	},
+	"login": {
+		"usernamePlaceholder": "Enter your username",
+		"passwordPlaceholder": "Enter your password",
+		"submit": "Log in",
+		"loadingTitle": "Logging in",
+		"loadingDescription": "Verifying your credentials...",
+		"successTitle": "Logged in successfully",
+		"welcome": "Welcome, {username}",
+		"errorTitle": "Login failed"
+	},
+	"balance": {
+		"title": "Balance Sheet",
+		"description": "This is the BalanceGeneral component.",
+		"logout": "Log out",
+		"loadingTitle": "Logging out",
+		"loadingDescription": "Closing your session...",
+		"pendingTitle": "Logged out on this device",
+		"pendingDescription": "Offline: logout will finish once you're back online",
+		"successTitle": "You logged out successfully",
+		"successDescription": "See you soon",
+		"errorTitle": "Logout failed"
+	},
+	"errors": {
+		"noConnection": "Could not connect to the server",
+		"unexpected": "An unexpected error occurred"
+	}
+}

@@ -1,13 +1,16 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
+import { Toaster } from "sileo";
 import { Login } from "./modules/auth/components/Login";
 import { BalanceGeneral } from "./modules/balanceGeneral/components/BalanceGeneral";
 import { AuthProvider } from "./modules/core/components/AuthProvider";
-import { Toaster } from "sileo";
+import { LanguageProvider } from "./modules/core/components/LanguageProvider";
+import { LanguageSelector } from "./modules/core/components/LanguageSelector";
 
 function App() {
 	return (
-		<>
-			<Toaster offset={20} />{" "}
+		<LanguageProvider>
+			<Toaster offset={20} />
+			<LanguageSelector />
 			<BrowserRouter>
 				<AuthProvider>
 					<Routes>
@@ -18,7 +21,7 @@ function App() {
 					</Routes>
 				</AuthProvider>
 			</BrowserRouter>
-		</>
+		</LanguageProvider>
 	);
 }
 

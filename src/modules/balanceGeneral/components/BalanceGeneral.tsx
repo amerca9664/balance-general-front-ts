@@ -2,35 +2,35 @@ import axios from "axios";
 import { sileo } from "sileo";
 import { useAuth } from "../../core/components/AuthProvider";
 import { GeneralButton } from "../../core/components/GeneralButton";
+import { useTranslation } from "../../core/components/LanguageProvider";
 import { logOutWithRetry } from "../../core/helpers/pendingLogout";
 
 export const BalanceGeneral = () => {
 	const { removeAuth } = useAuth();
+	const { t } = useTranslation();
 
 	const handleLogOut = async () => {
 		try {
 			await sileo.promise(logOutWithRetry(), {
 				loading: {
-					title: "Cerrando sesión",
-					description: "Cerrando tu sesión...",
+					title: t.balance.loadingTitle,
+					description: t.balance.loadingDescription,
 				},
 				success: (result) =>
 					result === "pending"
 						? {
-								title: "Sesión cerrada en este dispositivo",
-								description:
-									"Sin conexión: se terminará de cerrar al recuperar internet",
+								title: t.balance.pendingTitle,
+								description: t.balance.pendingDescription,
 							}
 						: {
-								title: "Cerraste sesión exitosamente",
-								description: "Hasta luego",
+								title: t.balance.successTitle,
+								description: t.balance.successDescription,
 							},
 				error: (error: unknown) => ({
-					title: "Error al cerrar sesión",
+					title: t.balance.errorTitle,
 					description: axios.isAxiosError(error)
-						? (error.response?.data?.message ??
-							"No fue posible conectar con el servidor")
-						: "Ocurrió un error inesperado",
+						? (error.response?.data?.message ?? t.errors.noConnection)
+						: t.errors.unexpected,
 				}),
 			});
 		} catch (error) {
@@ -43,12 +43,12 @@ export const BalanceGeneral = () => {
 
 	return (
 		<div className="flex flex-col gap-4 items-center bg-gray-800 justify-center h-screen">
-			<h1 className="text-white text-2xl font-bold">Balance General</h1>
-			<p className="text-white">Este es el componente BalanceGeneral.</p>
+			<h1 className="text-white text-2xl font-bold">{t.balance.title}</h1>
+			<p className="text-white">{t.balance.description}</p>
 			<GeneralButton
 				onClickButton={handleLogOut}
 				typeButton="button"
-				textName="Logout"
+				textName={t.balance.logout}
 			></GeneralButton>
 		</div>
 	);
