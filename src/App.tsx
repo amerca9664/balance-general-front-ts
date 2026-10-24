@@ -5,22 +5,27 @@ import { BalanceGeneral } from "./modules/balanceGeneral/components/BalanceGener
 import { AuthProvider } from "./modules/core/components/AuthProvider";
 import { LanguageProvider } from "./modules/core/components/LanguageProvider";
 import { LanguageSelector } from "./modules/core/components/LanguageSelector";
+import { ThemeProvider } from "./modules/core/components/ThemeProvider";
+import { ThemeSelector } from "./modules/core/components/ThemeSelector";
 
 function App() {
 	return (
 		<LanguageProvider>
-			<Toaster offset={20} />
-			<LanguageSelector />
-			<BrowserRouter>
-				<AuthProvider>
-					<Routes>
-						{/* Al entrar a la raíz "/" redirige automáticamente a "/login" */}
-						<Route path="/" element={<Navigate to="/login" replace />} />
-						<Route path="/login" element={<Login />} />
-						<Route path="/balancegeneral" element={<BalanceGeneral />} />
-					</Routes>
-				</AuthProvider>
-			</BrowserRouter>
+			<ThemeProvider>
+				<Toaster position="top-center" />
+				<LanguageSelector />
+				<ThemeSelector />
+				<BrowserRouter>
+					<AuthProvider>
+						<Routes>
+							{/* Al entrar a la raíz "/" redirige automáticamente a "/login" */}
+							<Route path="/" element={<Navigate to="/login" replace />} />
+							<Route path="/login" element={<Login />} />
+							<Route path="/balancegeneral" element={<BalanceGeneral />} />
+						</Routes>
+					</AuthProvider>
+				</BrowserRouter>
+			</ThemeProvider>
 		</LanguageProvider>
 	);
 }

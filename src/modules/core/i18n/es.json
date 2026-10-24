@@ -3,6 +3,12 @@
 		"name": "Español",
 		"label": "Idioma"
 	},
+	"theme": {
+		"label": "Tema",
+		"system": "Sistema",
+		"light": "Claro",
+		"dark": "Oscuro"
+	},
 	"login": {
 		"usernamePlaceholder": "Ingresa tu usuario",
 		"passwordPlaceholder": "Ingresa tu contraseña",
