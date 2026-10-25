@@ -1,7 +1,7 @@
 import type { TurnstileInstance } from "@marsidev/react-turnstile";
 import { Turnstile } from "@marsidev/react-turnstile";
 import axios from "axios";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { sileo } from "sileo";
 import { useAuth } from "../../core/components/AuthProvider";
 import { Floating3DParticles } from "../../core/components/Floating-3d-particles";
@@ -10,11 +10,20 @@ import { GeneralInputText } from "../../core/components/GeneralInputText";
 import { useTranslation } from "../../core/components/LanguageProvider";
 import { apiLogin } from "../apis/loginApi";
 import { useIdempotecyKeyGenonName } from "../hooks/useIdempotecyKeyGen";
+import type { RateLimitResponse } from "../types/authTypes";
+import { LoginBlockMessage } from "./LoginBlockMessage";
 
 const turnstileEnabled = process.env.NODE_ENV === "production";
 
+// Igual que el back arma la clave email+IP del rate limit.
+const normalizeEmail = (email: string) => email.trim().toLowerCase();
+
+// email null = bloqueo por IP: aplica a cualquier usuario.
+type LoginBlock = { email: string | null; until: number };
+
 export const Login = () => {
 	const [isPending, setIsPending] = useState(false);
+	const [block, setBlock] = useState<LoginBlock | null>(null);
 	const [inputUserState, setInputUserState] = useState("");
 	const [passwordState, setPasswordState] = useState("");
 	const [turnstileToken, setTurnstileToken] = useState("");
@@ -23,6 +32,11 @@ export const Login = () => {
 	const { t } = useTranslation();
 	const { generateIdempotencyKey, idempotencyKey, resetIdempotencyKey } =
 		useIdempotecyKeyGenonName();
+
+	const isBlocked =
+		block !== null &&
+		(block.email === null || block.email === normalizeEmail(inputUserState));
+	const clearBlock = useCallback(() => setBlock(null), []);
 
 	const loginHandler = async ({
 		email,
@@ -59,6 +73,14 @@ export const Login = () => {
 					error: (error: unknown) => {
 						if (axios.isAxiosError(error) && error.response?.status === 401) {
 							resetIdempotencyKey();
+						}
+						if (axios.isAxiosError(error) && error.response?.status === 429) {
+							const data = error.response.data as Partial<RateLimitResponse>;
+							const retryAfter = data.retryAfter ?? 60;
+							setBlock({
+								email: data.scope === "user_ip" ? normalizeEmail(email) : null,
+								until: Date.now() + retryAfter * 1000,
+							});
 						}
 
 						return {
@@ -108,11 +130,20 @@ export const Login = () => {
 			<GeneralButton
 				typeButton="button"
 				textName={t.login.submit}
-				disabled={(turnstileEnabled && !turnstileToken) || isPending}
+				disabled={
+					(turnstileEnabled && !turnstileToken) || isPending || isBlocked
+				}
 				onClickButton={() => {
 					loginHandler({ email: inputUserState, password: passwordState });
 				}}
 			/>
+			{isBlocked && (
+				<LoginBlockMessage
+					until={block.until}
+					byIp={block.email === null}
+					onExpire={clearBlock}
+				/>
+			)}
 		</div>
 	);
 };

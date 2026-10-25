@@ -17,7 +17,9 @@
 		"loadingDescription": "Verificando tus credenciales...",
 		"successTitle": "Inicio de sesión exitoso",
 		"welcome": "Bienvenido, {username}",
-		"errorTitle": "Error al iniciar sesión"
+		"errorTitle": "Error al iniciar sesión",
+		"blockedUser": "Demasiados intentos con este usuario. Intenta de nuevo en {time}",
+		"blockedIp": "Demasiados intentos desde tu red. Intenta de nuevo en {time}"
 	},
 	"balance": {
 		"title": "Balance General",

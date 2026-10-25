@@ -17,7 +17,9 @@
 		"loadingDescription": "Verifying your credentials...",
 		"successTitle": "Logged in successfully",
 		"welcome": "Welcome, {username}",
-		"errorTitle": "Login failed"
+		"errorTitle": "Login failed",
+		"blockedUser": "Too many attempts for this user. Try again in {time}",
+		"blockedIp": "Too many attempts from your network. Try again in {time}"
 	},
 	"balance": {
 		"title": "Balance Sheet",

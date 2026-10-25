@@ -19,3 +19,11 @@ export type RefreshResponse = {
 	token?: string;
 	roles?: string[];
 };
+
+// 429 del rate limit de /login. scope "user_ip" = solo ese email en esta IP.
+export type RateLimitResponse = {
+	success: false;
+	message: string;
+	scope: "ip" | "user_ip";
+	retryAfter: number;
+};
