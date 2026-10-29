@@ -6,7 +6,7 @@ export const LanguageSelector = () => {
 	return (
 		<select
 			aria-label={t.language.label}
-			className="fixed top-4 right-4 z-50 p-2 rounded-md text-blue-50 bg-gray-700 border border-gray-600 focus:outline-none focus:border-blue-500"
+			className="p-2 rounded-md text-gray-900 bg-white border border-gray-300 dark:text-blue-50 dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:border-blue-500"
 			value={language}
 			onChange={(e) => setLanguage(e.target.value)}
 		>

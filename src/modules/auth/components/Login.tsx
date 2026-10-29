@@ -103,7 +103,7 @@ export const Login = () => {
 	};
 
 	return (
-		<div className="flex flex-col gap-4 items-center bg-gray-800 justify-center h-screen">
+		<div className="flex flex-col gap-4 items-center bg-gray-50 dark:bg-gray-800 justify-center h-screen">
 			<Floating3DParticles />
 			<GeneralInputText
 				typeInput="text"

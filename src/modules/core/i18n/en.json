@@ -33,6 +33,12 @@
 		"successDescription": "See you soon",
 		"errorTitle": "Logout failed"
 	},
+	"modules": {
+		"label": "Modules",
+		"open": "Modules",
+		"close": "Close",
+		"balanceGeneral": "Balance Sheet"
+	},
 	"errors": {
 		"noConnection": "Could not connect to the server",
 		"unexpected": "An unexpected error occurred"

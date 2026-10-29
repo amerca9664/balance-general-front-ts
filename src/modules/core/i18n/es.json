@@ -33,6 +33,12 @@
 		"successDescription": "Hasta luego",
 		"errorTitle": "Error al cerrar sesión"
 	},
+	"modules": {
+		"label": "Módulos",
+		"open": "Módulos",
+		"close": "Cerrar",
+		"balanceGeneral": "Balance General"
+	},
 	"errors": {
 		"noConnection": "No fue posible conectar con el servidor",
 		"unexpected": "Ocurrió un error inesperado"

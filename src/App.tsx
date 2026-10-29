@@ -5,6 +5,7 @@ import { BalanceGeneral } from "./modules/balanceGeneral/components/BalanceGener
 import { AuthProvider } from "./modules/core/components/AuthProvider";
 import { LanguageProvider } from "./modules/core/components/LanguageProvider";
 import { LanguageSelector } from "./modules/core/components/LanguageSelector";
+import { SidebarLayout } from "./modules/core/components/Sidebar";
 import { ThemeProvider } from "./modules/core/components/ThemeProvider";
 import { ThemeSelector } from "./modules/core/components/ThemeSelector";
 
@@ -13,15 +14,19 @@ function App() {
 		<LanguageProvider>
 			<ThemeProvider>
 				<Toaster position="top-center" />
-				<LanguageSelector />
-				<ThemeSelector />
+				<div className="fixed top-4 right-4 z-50 flex gap-2">
+					<ThemeSelector />
+					<LanguageSelector />
+				</div>
 				<BrowserRouter>
 					<AuthProvider>
 						<Routes>
 							{/* Al entrar a la raíz "/" redirige automáticamente a "/login" */}
 							<Route path="/" element={<Navigate to="/login" replace />} />
 							<Route path="/login" element={<Login />} />
-							<Route path="/balancegeneral" element={<BalanceGeneral />} />
+							<Route element={<SidebarLayout />}>
+								<Route path="/balancegeneral" element={<BalanceGeneral />} />
+							</Route>
 						</Routes>
 					</AuthProvider>
 				</BrowserRouter>

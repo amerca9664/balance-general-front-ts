@@ -33,7 +33,7 @@ export const LoginBlockMessage = ({
 	if (remaining === 0) return null;
 
 	return (
-		<p role="status" className="text-sm text-red-300">
+		<p role="status" className="text-sm text-red-700 dark:text-red-300">
 			{(byIp ? t.login.blockedIp : t.login.blockedUser).replace(
 				"{time}",
 				formatTime(remaining),
