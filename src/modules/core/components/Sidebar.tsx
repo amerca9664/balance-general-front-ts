@@ -56,7 +56,7 @@ export const Sidebar = () => {
 				aria-controls="sidebar"
 				onClick={() => setOpen(!open)}
 				aria-label={open ? t.modules.close : t.modules.open}
-				className="fixed top-4 left-4 z-50 p-2 rounded-md text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 hover:cursor-pointer dark:text-blue-50 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 focus-visible:outline-2 focus-visible:outline-blue-400"
+				className="fixed top-4 left-4 z-70 p-2 rounded-md text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 hover:cursor-pointer dark:text-blue-50 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 focus-visible:outline-2 focus-visible:outline-blue-400"
 			>
 				<svg
 					aria-hidden="true"
@@ -80,13 +80,13 @@ export const Sidebar = () => {
 					tabIndex={-1}
 					aria-label={t.modules.close}
 					onClick={() => setOpen(false)}
-					className="fixed inset-0 z-30 bg-black/50"
+					className="fixed inset-0 z-60 bg-black/50"
 				/>
 			)}
 			<nav
 				id="sidebar"
 				aria-label={t.modules.label}
-				className={`${open ? "flex" : "hidden"} fixed inset-y-0 left-0 z-40 w-64 shrink-0 flex-col gap-1 bg-white border-r border-gray-200 dark:bg-gray-900 dark:border-gray-700 px-3 pt-20 pb-4`}
+				className={`${open ? "flex" : "hidden"} fixed inset-y-0 left-0 z-60 w-64 shrink-0 flex-col gap-1 bg-white border-r border-gray-200 dark:bg-gray-900 dark:border-gray-700 px-3 pt-20 pb-4`}
 			>
 				{/* pt-20 deja libre el boton hamburguesa fijo en top-left */}
 				{modules.map((module) => (
