@@ -187,7 +187,7 @@ export function Floating3DParticles({
 			if (r <= 0) return;
 
 			ctx.beginPath();
-			ctx.fillStyle = hexToRgba(colorRef.current, p.opacity);
+			ctx.globalAlpha = p.opacity;
 			ctx.arc(p.screenX, p.screenY, r, 0, Math.PI * 2);
 			ctx.fill();
 		};
@@ -195,6 +195,7 @@ export function Floating3DParticles({
 		// Static frame for reduced motion
 		const staticFrame = () => {
 			ctx.clearRect(0, 0, width, height);
+			ctx.fillStyle = hexToRgba(colorRef.current, 1);
 			const cx = width / 2;
 			const cy = height / 2;
 
@@ -264,6 +265,8 @@ export function Floating3DParticles({
 
 			// Painter's algorithm: draw farthest particles first
 			particles.sort((a, b) => a.projectedScale - b.projectedScale);
+			// Color parsed once per frame; per-particle opacity goes via globalAlpha.
+			ctx.fillStyle = hexToRgba(colorRef.current, 1);
 			for (const p of particles) draw(p);
 
 			s.rafId = requestAnimationFrame(tick);
