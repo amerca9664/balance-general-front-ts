@@ -1,5 +1,10 @@
+import axios from "axios";
 import { useState } from "react";
 import { NavLink, Outlet } from "react-router";
+import { sileo } from "sileo";
+import { logOutWithRetry } from "../helpers/pendingLogout";
+import { useAuth } from "./AuthProvider";
+import { GeneralButton } from "./GeneralButton";
 import { useTranslation } from "./LanguageProvider";
 
 // Para agregar un modulo: una entrada aqui, su <Route> en App.tsx y su texto en i18n "modules".
@@ -10,6 +15,39 @@ export const Sidebar = () => {
 	const { t } = useTranslation();
 	// En PC arranca abierta y empuja el contenido; en movil arranca cerrada y flota encima.
 	const [open, setOpen] = useState(desktop.matches);
+	const { removeAuth } = useAuth();
+
+	const handleLogOut = async () => {
+		try {
+			await sileo.promise(logOutWithRetry(), {
+				loading: {
+					title: t.balance.loadingTitle,
+					description: t.balance.loadingDescription,
+				},
+				success: (result) =>
+					result === "pending"
+						? {
+								title: t.balance.pendingTitle,
+								description: t.balance.pendingDescription,
+							}
+						: {
+								title: t.balance.successTitle,
+								description: t.balance.successDescription,
+							},
+				error: (error: unknown) => ({
+					title: t.balance.errorTitle,
+					description: axios.isAxiosError(error)
+						? (error.response?.data?.message ?? t.errors.noConnection)
+						: t.errors.unexpected,
+				}),
+			});
+		} catch (error) {
+			console.error("Error durante el cierre de sesión:", error);
+		} finally {
+			// La UI cierra sesion siempre, haya o no respuesta del back.
+			removeAuth();
+		}
+	};
 
 	return (
 		<>
@@ -59,6 +97,13 @@ export const Sidebar = () => {
 						{t.modules[module.label]}
 					</NavLink>
 				))}
+				<div className="mt-auto grid">
+					<GeneralButton
+						onClickButton={handleLogOut}
+						typeButton="button"
+						textName={t.balance.logout}
+					/>
+				</div>
 			</nav>
 		</>
 	);
