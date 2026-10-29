@@ -9,12 +9,11 @@ import { useTranslation } from "./LanguageProvider";
 
 // Para agregar un modulo: una entrada aqui, su <Route> en App.tsx y su texto en i18n "modules".
 const modules = [{ path: "/balancegeneral", label: "balanceGeneral" }] as const;
-const desktop = window.matchMedia("(min-width: 768px)");
 
 export const Sidebar = () => {
 	const { t } = useTranslation();
-	// En PC arranca abierta y empuja el contenido; en movil arranca cerrada y flota encima.
-	const [open, setOpen] = useState(desktop.matches);
+	// Flota encima del contenido sin achicarlo; click fuera la cierra.
+	const [open, setOpen] = useState(false);
 	const { removeAuth } = useAuth();
 
 	const handleLogOut = async () => {
@@ -75,17 +74,26 @@ export const Sidebar = () => {
 					)}
 				</svg>
 			</button>
+			{open && (
+				<button
+					type="button"
+					tabIndex={-1}
+					aria-label={t.modules.close}
+					onClick={() => setOpen(false)}
+					className="fixed inset-0 z-30 bg-black/50"
+				/>
+			)}
 			<nav
 				id="sidebar"
 				aria-label={t.modules.label}
-				className={`${open ? "flex" : "hidden"} fixed md:static inset-y-0 left-0 z-40 w-64 shrink-0 flex-col gap-1 bg-white border-r border-gray-200 dark:bg-gray-900 dark:border-gray-700 px-3 pt-20 pb-4`}
+				className={`${open ? "flex" : "hidden"} fixed inset-y-0 left-0 z-40 w-64 shrink-0 flex-col gap-1 bg-white border-r border-gray-200 dark:bg-gray-900 dark:border-gray-700 px-3 pt-20 pb-4`}
 			>
 				{/* pt-20 deja libre el boton hamburguesa fijo en top-left */}
 				{modules.map((module) => (
 					<NavLink
 						key={module.path}
 						to={module.path}
-						onClick={() => !desktop.matches && setOpen(false)}
+						onClick={() => setOpen(false)}
 						className={({ isActive }) =>
 							`rounded-md border-l-4 px-3 py-2 focus-visible:outline-2 focus-visible:outline-blue-400 ${
 								isActive
