@@ -9,12 +9,16 @@ export const SideModal = ({
 	onClose,
 	title,
 	children,
+	persistent = false,
 }: {
 	open: boolean;
 	onClose: () => void;
 	title: string;
 	children: ReactNode;
+	// true: solo cierra con la X o un boton propio (sin click fuera ni Escape).
+	persistent?: boolean;
 }) => {
+	const closeFromBackdrop = () => !persistent && onClose();
 	const { t } = useTranslation();
 	const ref = useRef<HTMLDialogElement>(null);
 	const titleId = useId();
@@ -27,13 +31,23 @@ export const SideModal = ({
 	}, [open]);
 
 	return (
-		// biome-ignore lint/a11y/useKeyWithClickEvents: el teclado ya cierra con Escape (nativo del dialog)
 		<dialog
 			ref={ref}
 			aria-labelledby={titleId}
 			onClose={onClose}
+			// Escape dispara cancel; prevenirlo deja el dialog abierto.
+			onCancel={(e) => persistent && e.preventDefault()}
 			// El dialog cubre solo el panel; un click que cae en el dialog mismo es el backdrop.
-			onClick={(e) => e.target === e.currentTarget && onClose()}
+			onClick={(e) => e.target === e.currentTarget && closeFromBackdrop()}
+			onKeyDown={(e) => {
+				if (
+					e.target === e.currentTarget &&
+					(e.key === "Enter" || e.key === " ")
+				) {
+					e.preventDefault();
+					closeFromBackdrop();
+				}
+			}}
 			className="fixed inset-y-0 right-0 left-auto m-0 h-dvh max-h-none w-full max-w-md p-0 bg-transparent backdrop:bg-black/50"
 		>
 			<div className="flex h-full flex-col gap-4 overflow-y-auto bg-white p-6 text-gray-900 dark:bg-gray-900 dark:text-white">

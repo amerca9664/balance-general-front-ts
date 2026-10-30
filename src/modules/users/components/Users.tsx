@@ -121,6 +121,7 @@ export const Users = () => {
 
 				<SideModal
 					open={modalOpen}
+					persistent={true}
 					onClose={resetForm}
 					title={editingId ? t.users.editTitle : t.users.createTitle}
 				>
