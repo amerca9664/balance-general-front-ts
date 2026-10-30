@@ -1,11 +1,12 @@
 import axios from "axios";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { sileo } from "sileo";
 import { useAuth } from "../../core/components/AuthProvider";
 import { GeneralButton } from "../../core/components/GeneralButton";
 import { GeneralInputText } from "../../core/components/GeneralInputText";
 import { useTranslation } from "../../core/components/LanguageProvider";
+import { SideModal } from "../../core/components/SideModal";
 import {
 	createUserApi,
 	deleteUserApi,
@@ -18,6 +19,7 @@ export const Users = () => {
 	const { token } = useAuth();
 	const { t } = useTranslation();
 	const [users, setUsers] = useState<User[]>([]);
+	const [modalOpen, setModalOpen] = useState(false);
 	const [editingId, setEditingId] = useState<string | null>(null);
 	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
@@ -48,10 +50,16 @@ export const Users = () => {
 	}, [token]);
 
 	const resetForm = () => {
+		setModalOpen(false);
 		setEditingId(null);
 		setUsername("");
 		setEmail("");
 		setPassword("");
+	};
+
+	const handleNew = () => {
+		resetForm();
+		setModalOpen(true);
 	};
 
 	const handleSave = async () => {
@@ -76,6 +84,7 @@ export const Users = () => {
 		setUsername(user.username);
 		setEmail(user.email);
 		setPassword("");
+		setModalOpen(true);
 	};
 
 	const handleDelete = async (user: User) => {
@@ -98,45 +107,56 @@ export const Users = () => {
 	return (
 		<div className="min-h-full bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white px-4 pt-20 pb-8">
 			<div className="mx-auto max-w-4xl flex flex-col gap-6">
-				<h1 className="text-2xl font-bold">{t.users.title}</h1>
+				<div className="flex items-center justify-between gap-4">
+					<h1 className="text-2xl font-bold">{t.users.title}</h1>
+					<button
+						type="button"
+						onClick={handleNew}
+						className="flex items-center gap-2 bg-blue-500 text-blue-50 p-2 rounded-md hover:bg-blue-600 hover:cursor-pointer focus-visible:outline-2 focus-visible:outline-blue-400"
+					>
+						<Plus className="size-5" />
+						{t.users.createTitle}
+					</button>
+				</div>
 
-				<form
-					className="flex flex-col gap-3"
-					onSubmit={(e) => {
-						e.preventDefault();
-						void handleSave();
-					}}
+				<SideModal
+					open={modalOpen}
+					onClose={resetForm}
+					title={editingId ? t.users.editTitle : t.users.createTitle}
 				>
-					<h2 className="text-lg font-semibold">
-						{editingId ? t.users.editTitle : t.users.createTitle}
-					</h2>
-					<GeneralInputText
-						valueText={username}
-						onChangeText={setUsername}
-						placeholderText={t.users.username}
-						typeInput="text"
-					/>
-					<GeneralInputText
-						valueText={email}
-						onChangeText={setEmail}
-						placeholderText={t.users.email}
-						typeInput="email"
-					/>
-					<GeneralInputText
-						valueText={password}
-						onChangeText={setPassword}
-						placeholderText={
-							editingId ? t.users.passwordKeep : t.users.password
-						}
-						typeInput="password"
-					/>
-					<div className="flex gap-2">
-						<GeneralButton
-							typeButton="submit"
-							onClickButton={() => {}}
-							textName={editingId ? t.users.save : t.users.create}
+					<form
+						className="flex flex-col gap-3"
+						onSubmit={(e) => {
+							e.preventDefault();
+							void handleSave();
+						}}
+					>
+						<GeneralInputText
+							valueText={username}
+							onChangeText={setUsername}
+							placeholderText={t.users.username}
+							typeInput="text"
 						/>
-						{editingId && (
+						<GeneralInputText
+							valueText={email}
+							onChangeText={setEmail}
+							placeholderText={t.users.email}
+							typeInput="email"
+						/>
+						<GeneralInputText
+							valueText={password}
+							onChangeText={setPassword}
+							placeholderText={
+								editingId ? t.users.passwordKeep : t.users.password
+							}
+							typeInput="password"
+						/>
+						<div className="flex gap-2">
+							<GeneralButton
+								typeButton="submit"
+								onClickButton={() => {}}
+								textName={editingId ? t.users.save : t.users.create}
+							/>
 							<button
 								type="button"
 								onClick={resetForm}
@@ -144,9 +164,9 @@ export const Users = () => {
 							>
 								{t.users.cancel}
 							</button>
-						)}
-					</div>
-				</form>
+						</div>
+					</form>
+				</SideModal>
 
 				{users.length === 0 ? (
 					<p className="text-gray-600 dark:text-gray-400">{t.users.empty}</p>
