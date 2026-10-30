@@ -37,7 +37,30 @@
 		"label": "Módulos",
 		"open": "Módulos",
 		"close": "Cerrar",
-		"balanceGeneral": "Balance General"
+		"balanceGeneral": "Balance General",
+		"users": "Usuarios"
+	},
+	"users": {
+		"title": "Usuarios",
+		"createTitle": "Nuevo usuario",
+		"editTitle": "Editar usuario",
+		"username": "Nombre de usuario",
+		"email": "Email",
+		"password": "Contraseña",
+		"passwordKeep": "Nueva contraseña (vacío para no cambiarla)",
+		"create": "Crear usuario",
+		"save": "Guardar cambios",
+		"cancel": "Cancelar",
+		"edit": "Editar",
+		"delete": "Eliminar",
+		"actions": "Acciones",
+		"empty": "Todavía no hay usuarios. Crea el primero con el formulario.",
+		"confirmDelete": "¿Eliminar a {username}? No se puede deshacer.",
+		"created": "Usuario creado",
+		"updated": "Cambios guardados",
+		"deleted": "Usuario eliminado",
+		"errorTitle": "No se pudo completar la acción",
+		"invalidData": "Revisa los datos: nombre de 3+ caracteres, email válido y contraseña de 6+ caracteres"
 	},
 	"errors": {
 		"noConnection": "No fue posible conectar con el servidor",

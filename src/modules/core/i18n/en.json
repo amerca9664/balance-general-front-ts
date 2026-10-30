@@ -37,7 +37,30 @@
 		"label": "Modules",
 		"open": "Modules",
 		"close": "Close",
-		"balanceGeneral": "Balance Sheet"
+		"balanceGeneral": "Balance Sheet",
+		"users": "Users"
+	},
+	"users": {
+		"title": "Users",
+		"createTitle": "New user",
+		"editTitle": "Edit user",
+		"username": "Username",
+		"email": "Email",
+		"password": "Password",
+		"passwordKeep": "New password (leave empty to keep it)",
+		"create": "Create user",
+		"save": "Save changes",
+		"cancel": "Cancel",
+		"edit": "Edit",
+		"delete": "Delete",
+		"actions": "Actions",
+		"empty": "No users yet. Create the first one with the form.",
+		"confirmDelete": "Delete {username}? This cannot be undone.",
+		"created": "User created",
+		"updated": "Changes saved",
+		"deleted": "User deleted",
+		"errorTitle": "Action could not be completed",
+		"invalidData": "Check the data: name with 3+ characters, valid email and password with 6+ characters"
 	},
 	"errors": {
 		"noConnection": "Could not connect to the server",

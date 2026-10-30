@@ -8,6 +8,7 @@ import { LanguageSelector } from "./modules/core/components/LanguageSelector";
 import { SidebarLayout } from "./modules/core/components/Sidebar";
 import { ThemeProvider } from "./modules/core/components/ThemeProvider";
 import { ThemeSelector } from "./modules/core/components/ThemeSelector";
+import { Users } from "./modules/users/components/Users";
 
 function App() {
 	return (
@@ -26,6 +27,7 @@ function App() {
 							<Route path="/login" element={<Login />} />
 							<Route element={<SidebarLayout />}>
 								<Route path="/balancegeneral" element={<BalanceGeneral />} />
+								<Route path="/usuarios" element={<Users />} />
 							</Route>
 						</Routes>
 					</AuthProvider>

@@ -8,7 +8,10 @@ import { GeneralButton } from "./GeneralButton";
 import { useTranslation } from "./LanguageProvider";
 
 // Para agregar un modulo: una entrada aqui, su <Route> en App.tsx y su texto en i18n "modules".
-const modules = [{ path: "/balancegeneral", label: "balanceGeneral" }] as const;
+const modules = [
+	{ path: "/balancegeneral", label: "balanceGeneral" },
+	{ path: "/usuarios", label: "users" },
+] as const;
 
 export const Sidebar = () => {
 	const { t } = useTranslation();

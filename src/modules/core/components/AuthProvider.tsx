@@ -30,8 +30,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 			clearPendingLogout();
 			setValue({ auth: true });
 			setToken(token);
-			// Redirigir a la página de balance general
-			navigate("/balancegeneral");
+			// Solo desde login: el refresh periodico tambien pasa por aca y no debe
+			// sacar al usuario del modulo en el que esta.
+			if (window.location.pathname === "/login") navigate("/balancegeneral");
 		} else {
 			setValue({ auth: false });
 			setToken(null);
