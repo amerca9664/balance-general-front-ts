@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { NavLink, Outlet } from "react-router";
 import { sileo } from "sileo";
@@ -61,21 +62,7 @@ export const Sidebar = () => {
 				aria-label={open ? t.modules.close : t.modules.open}
 				className="fixed top-4 left-4 z-70 p-2 rounded-md text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 hover:cursor-pointer dark:text-blue-50 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 focus-visible:outline-2 focus-visible:outline-blue-400"
 			>
-				<svg
-					aria-hidden="true"
-					viewBox="0 0 24 24"
-					className="size-6"
-					fill="none"
-					stroke="currentColor"
-					strokeWidth="2"
-					strokeLinecap="round"
-				>
-					{open ? (
-						<path d="M6 6l12 12M18 6L6 18" />
-					) : (
-						<path d="M4 6h16M4 12h16M4 18h16" />
-					)}
-				</svg>
+				{open ? <X className="size-6" /> : <Menu className="size-6" />}
 			</button>
 			{open && (
 				<button
