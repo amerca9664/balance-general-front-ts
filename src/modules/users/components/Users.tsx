@@ -1,8 +1,9 @@
 import axios from "axios";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { sileo } from "sileo";
 import { useAuth } from "../../core/components/AuthProvider";
+import { DataTable } from "../../core/components/DataTable";
 import { GeneralButton } from "../../core/components/GeneralButton";
 import { GeneralInputText } from "../../core/components/GeneralInputText";
 import { useTranslation } from "../../core/components/LanguageProvider";
@@ -169,56 +170,18 @@ export const Users = () => {
 					</form>
 				</SideModal>
 
-				{users.length === 0 ? (
-					<p className="text-gray-600 dark:text-gray-400">{t.users.empty}</p>
-				) : (
-					<div className="overflow-x-auto">
-						<table className="w-full text-left">
-							<thead className="border-b border-gray-300 dark:border-gray-600">
-								<tr>
-									<th className="py-2 pr-4 font-semibold">
-										{t.users.username}
-									</th>
-									<th className="py-2 pr-4 font-semibold">{t.users.email}</th>
-									<th className="py-2">
-										<span className="sr-only">{t.users.actions}</span>
-									</th>
-								</tr>
-							</thead>
-							<tbody>
-								{users.map((user) => (
-									<tr
-										key={user._id}
-										className="border-b border-gray-200 dark:border-gray-700"
-									>
-										<td className="py-2 pr-4">{user.username}</td>
-										<td className="py-2 pr-4">{user.email}</td>
-										<td className="py-2 flex gap-1 justify-end">
-											<button
-												type="button"
-												onClick={() => handleEdit(user)}
-												aria-label={`${t.users.edit} ${user.username}`}
-												title={t.users.edit}
-												className="p-1.5 rounded-md text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-gray-700 hover:cursor-pointer focus-visible:outline-2 focus-visible:outline-blue-400"
-											>
-												<Pencil className="size-5" />
-											</button>
-											<button
-												type="button"
-												onClick={() => void handleDelete(user)}
-												aria-label={`${t.users.delete} ${user.username}`}
-												title={t.users.delete}
-												className="p-1.5 rounded-md text-red-700 hover:bg-red-50 dark:text-red-300 dark:hover:bg-gray-700 hover:cursor-pointer focus-visible:outline-2 focus-visible:outline-blue-400"
-											>
-												<Trash2 className="size-5" />
-											</button>
-										</td>
-									</tr>
-								))}
-							</tbody>
-						</table>
-					</div>
-				)}
+				<DataTable
+					rows={users}
+					columns={[
+						{ header: t.users.username, cell: (user) => user.username },
+						{ header: t.users.email, cell: (user) => user.email },
+					]}
+					emptyText={t.users.empty}
+					labels={t.users}
+					rowLabel={(user) => user.username}
+					onEdit={handleEdit}
+					onDelete={(user) => void handleDelete(user)}
+				/>
 			</div>
 		</div>
 	);
