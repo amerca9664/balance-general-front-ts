@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Plus } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { sileo } from "sileo";
 import { useAuth } from "../../core/components/AuthProvider";
@@ -8,6 +8,8 @@ import { GeneralButton } from "../../core/components/GeneralButton";
 import { GeneralInputText } from "../../core/components/GeneralInputText";
 import { useTranslation } from "../../core/components/LanguageProvider";
 import { SideModal } from "../../core/components/SideModal";
+import { listRolesApi } from "../../roles/apis/rolesApi";
+import type { Role } from "../../roles/types/roleTypes";
 import {
 	createUserApi,
 	deleteUserApi,
@@ -25,6 +27,8 @@ export const Users = () => {
 	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [allRoles, setAllRoles] = useState<Role[]>([]);
+	const [roleIds, setRoleIds] = useState<string[]>([]);
 
 	const showError = (error: unknown) =>
 		sileo.error({
@@ -44,11 +48,32 @@ export const Users = () => {
 		}
 	};
 
+	// Sin permiso "roles.read" el back responde 403: la lista queda vacia y no se pueden asignar.
+	const loadRoles = async () => {
+		try {
+			setAllRoles(await listRolesApi(token));
+		} catch {
+			setAllRoles([]);
+		}
+	};
+
 	// biome-ignore lint/correctness/useExhaustiveDependencies: solo recargar cuando llega el token (React Compiler ya memoiza loadUsers)
 	useEffect(() => {
 		// El token llega con el primer refresh; antes la request daria 401.
-		if (token) void loadUsers();
+		if (token) {
+			void loadUsers();
+			void loadRoles();
+		}
 	}, [token]);
+
+	const roleNames = (user: User) =>
+		allRoles
+			.filter((role) => user.roles.includes(role._id))
+			.map((role) => role.name)
+			.join(", ") || "—";
+
+	const assignedRoles = allRoles.filter((role) => roleIds.includes(role._id));
+	const availableRoles = allRoles.filter((role) => !roleIds.includes(role._id));
 
 	const resetForm = () => {
 		setModalOpen(false);
@@ -56,6 +81,7 @@ export const Users = () => {
 		setUsername("");
 		setEmail("");
 		setPassword("");
+		setRoleIds([]);
 	};
 
 	const handleNew = () => {
@@ -64,7 +90,7 @@ export const Users = () => {
 	};
 
 	const handleSave = async () => {
-		const form = { username, email, password };
+		const form = { username, email, password, roles: roleIds };
 		try {
 			if (editingId) {
 				await updateUserApi(token, editingId, form);
@@ -85,6 +111,7 @@ export const Users = () => {
 		setUsername(user.username);
 		setEmail(user.email);
 		setPassword("");
+		setRoleIds(user.roles);
 		setModalOpen(true);
 	};
 
@@ -153,6 +180,52 @@ export const Users = () => {
 							}
 							typeInput="password"
 						/>
+						{allRoles.length > 0 && (
+							<div className="flex flex-col gap-2">
+								<label className="flex flex-col gap-1">
+									<span className="text-sm">{t.users.roles}</span>
+									{/* Elegir una opcion la agrega y el select vuelve al placeholder. */}
+									<select
+										value=""
+										disabled={availableRoles.length === 0}
+										onChange={(e) => setRoleIds([...roleIds, e.target.value])}
+										className="p-2 rounded-md border border-gray-300 bg-white dark:border-gray-600 dark:bg-gray-700 focus-visible:outline-2 focus-visible:outline-blue-400"
+									>
+										<option value="" disabled>
+											{t.users.addRole}
+										</option>
+										{availableRoles.map((role) => (
+											<option key={role._id} value={role._id}>
+												{role.name}
+											</option>
+										))}
+									</select>
+								</label>
+								{assignedRoles.length > 0 && (
+									<ul className="flex flex-wrap gap-2">
+										{assignedRoles.map((role) => (
+											<li
+												key={role._id}
+												className="flex items-center gap-1 rounded-full bg-blue-100 text-blue-900 dark:bg-blue-900 dark:text-blue-100 pl-3 pr-1 py-0.5 text-sm"
+											>
+												{role.name}
+												<button
+													type="button"
+													onClick={() =>
+														setRoleIds(roleIds.filter((id) => id !== role._id))
+													}
+													aria-label={`${t.users.removeRole} ${role.name}`}
+													title={t.users.removeRole}
+													className="p-0.5 rounded-full hover:bg-blue-200 dark:hover:bg-blue-800 hover:cursor-pointer focus-visible:outline-2 focus-visible:outline-blue-400"
+												>
+													<X className="size-4" />
+												</button>
+											</li>
+										))}
+									</ul>
+								)}
+							</div>
+						)}
 						<div className="flex gap-2">
 							<GeneralButton
 								typeButton="submit"
@@ -175,6 +248,7 @@ export const Users = () => {
 					columns={[
 						{ header: t.users.username, cell: (user) => user.username },
 						{ header: t.users.email, cell: (user) => user.email },
+						{ header: t.users.roles, cell: roleNames },
 					]}
 					emptyText={t.users.empty}
 					labels={t.users}

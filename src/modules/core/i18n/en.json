@@ -39,7 +39,8 @@
 		"close": "Close",
 		"balanceGeneral": "Balance Sheet",
 		"users": "Users",
-		"roles": "Roles"
+		"roles": "Roles",
+		"departments": "Departments"
 	},
 	"users": {
 		"title": "Users",
@@ -61,7 +62,10 @@
 		"updated": "Changes saved",
 		"deleted": "User deleted",
 		"errorTitle": "Action could not be completed",
-		"invalidData": "Check the data: name with 3+ characters, valid email and password with 6+ characters"
+		"invalidData": "Check the data: name with 3+ characters, valid email and password with 6+ characters",
+		"roles": "Roles",
+		"addRole": "Add role",
+		"removeRole": "Remove"
 	},
 	"roles": {
 		"title": "Roles",
@@ -84,7 +88,28 @@
 		"updated": "Changes saved",
 		"deleted": "Role deleted",
 		"errorTitle": "Could not complete the action",
-		"invalidData": "Check the data: name with 2+ characters and a valid user type"
+		"invalidData": "Check the data: name with 2+ characters, user type and department",
+		"department": "Department",
+		"selectDepartment": "Choose a department"
+	},
+	"departments": {
+		"title": "Departments",
+		"createTitle": "New department",
+		"editTitle": "Edit department",
+		"name": "Name",
+		"create": "Create department",
+		"save": "Save changes",
+		"cancel": "Cancel",
+		"edit": "Edit",
+		"delete": "Delete",
+		"actions": "Actions",
+		"empty": "No departments yet. Create the first one.",
+		"confirmDelete": "Delete department {name}? This cannot be undone.",
+		"created": "Department created",
+		"updated": "Changes saved",
+		"deleted": "Department deleted",
+		"errorTitle": "Could not complete the action",
+		"invalidData": "Check the data: name with 2+ characters"
 	},
 	"errors": {
 		"noConnection": "Could not connect to the server",

@@ -13,6 +13,7 @@ const modules = [
 	{ path: "/balancegeneral", label: "balanceGeneral" },
 	{ path: "/usuarios", label: "users" },
 	{ path: "/roles", label: "roles" },
+	{ path: "/departamentos", label: "departments" },
 ] as const;
 
 export const Sidebar = () => {

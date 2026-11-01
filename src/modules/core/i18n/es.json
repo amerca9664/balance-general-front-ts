@@ -39,7 +39,8 @@
 		"close": "Cerrar",
 		"balanceGeneral": "Balance General",
 		"users": "Usuarios",
-		"roles": "Roles"
+		"roles": "Roles",
+		"departments": "Departamentos"
 	},
 	"users": {
 		"title": "Usuarios",
@@ -61,7 +62,10 @@
 		"updated": "Cambios guardados",
 		"deleted": "Usuario eliminado",
 		"errorTitle": "No se pudo completar la acción",
-		"invalidData": "Revisa los datos: nombre de 3+ caracteres, email válido y contraseña de 6+ caracteres"
+		"invalidData": "Revisa los datos: nombre de 3+ caracteres, email válido y contraseña de 6+ caracteres",
+		"roles": "Roles",
+		"addRole": "Agregar rol",
+		"removeRole": "Quitar"
 	},
 	"roles": {
 		"title": "Roles",
@@ -84,7 +88,28 @@
 		"updated": "Cambios guardados",
 		"deleted": "Rol eliminado",
 		"errorTitle": "No se pudo completar la acción",
-		"invalidData": "Revisa los datos: nombre de 2+ caracteres y un tipo de usuario válido"
+		"invalidData": "Revisa los datos: nombre de 2+ caracteres, tipo de usuario y departamento",
+		"department": "Departamento",
+		"selectDepartment": "Elige un departamento"
+	},
+	"departments": {
+		"title": "Departamentos",
+		"createTitle": "Nuevo departamento",
+		"editTitle": "Editar departamento",
+		"name": "Nombre",
+		"create": "Crear departamento",
+		"save": "Guardar cambios",
+		"cancel": "Cancelar",
+		"edit": "Editar",
+		"delete": "Eliminar",
+		"actions": "Acciones",
+		"empty": "Todavía no hay departamentos. Crea el primero.",
+		"confirmDelete": "¿Eliminar el departamento {name}? No se puede deshacer.",
+		"created": "Departamento creado",
+		"updated": "Cambios guardados",
+		"deleted": "Departamento eliminado",
+		"errorTitle": "No se pudo completar la acción",
+		"invalidData": "Revisa los datos: nombre de 2+ caracteres"
 	},
 	"errors": {
 		"noConnection": "No fue posible conectar con el servidor",

@@ -8,6 +8,8 @@ import { GeneralButton } from "../../core/components/GeneralButton";
 import { GeneralInputText } from "../../core/components/GeneralInputText";
 import { useTranslation } from "../../core/components/LanguageProvider";
 import { SideModal } from "../../core/components/SideModal";
+import { listDepartmentsApi } from "../../departments/apis/departmentsApi";
+import type { Department } from "../../departments/types/departmentTypes";
 import {
 	createRoleApi,
 	deleteRoleApi,
@@ -26,6 +28,8 @@ export const Roles = () => {
 	const [userType, setUserType] = useState<UserType>("user");
 	const [read, setRead] = useState(false);
 	const [write, setWrite] = useState(false);
+	const [department, setDepartment] = useState("");
+	const [departments, setDepartments] = useState<Department[]>([]);
 
 	const showError = (error: unknown) =>
 		sileo.error({
@@ -45,11 +49,26 @@ export const Roles = () => {
 		}
 	};
 
+	// Sin permiso "departments.read" el back responde 403: el select queda vacio.
+	const loadDepartments = async () => {
+		try {
+			setDepartments(await listDepartmentsApi(token));
+		} catch {
+			setDepartments([]);
+		}
+	};
+
 	// biome-ignore lint/correctness/useExhaustiveDependencies: solo recargar cuando llega el token (React Compiler ya memoiza loadRoles)
 	useEffect(() => {
 		// El token llega con el primer refresh; antes la request daria 401.
-		if (token) void loadRoles();
+		if (token) {
+			void loadRoles();
+			void loadDepartments();
+		}
 	}, [token]);
+
+	const departmentName = (role: Role) =>
+		departments.find((item) => item._id === role.department)?.name ?? "—";
 
 	const resetForm = () => {
 		setModalOpen(false);
@@ -58,6 +77,7 @@ export const Roles = () => {
 		setUserType("user");
 		setRead(false);
 		setWrite(false);
+		setDepartment("");
 	};
 
 	const handleNew = () => {
@@ -66,7 +86,7 @@ export const Roles = () => {
 	};
 
 	const handleSave = async () => {
-		const form = { name, userType, permissions: { read, write } };
+		const form = { name, userType, department, permissions: { read, write } };
 		try {
 			if (editingId) {
 				await updateRoleApi(token, editingId, form);
@@ -88,6 +108,7 @@ export const Roles = () => {
 		setUserType(role.userType);
 		setRead(role.permissions.read);
 		setWrite(role.permissions.write);
+		setDepartment(role.department ?? "");
 		setModalOpen(true);
 	};
 
@@ -160,6 +181,24 @@ export const Roles = () => {
 								))}
 							</select>
 						</label>
+						<label className="flex flex-col gap-1">
+							<span className="text-sm">{t.roles.department}</span>
+							<select
+								required
+								value={department}
+								onChange={(e) => setDepartment(e.target.value)}
+								className="p-2 rounded-md border border-gray-300 bg-white dark:border-gray-600 dark:bg-gray-700 focus-visible:outline-2 focus-visible:outline-blue-400"
+							>
+								<option value="" disabled>
+									{t.roles.selectDepartment}
+								</option>
+								{departments.map((item) => (
+									<option key={item._id} value={item._id}>
+										{item.name}
+									</option>
+								))}
+							</select>
+						</label>
 						<fieldset className="flex gap-4">
 							<legend className="text-sm mb-1">{t.roles.permissions}</legend>
 							<label className="flex items-center gap-2">
@@ -201,6 +240,7 @@ export const Roles = () => {
 					columns={[
 						{ header: t.roles.name, cell: (role) => role.name },
 						{ header: t.roles.userType, cell: (role) => role.userType },
+						{ header: t.roles.department, cell: departmentName },
 						{ header: t.roles.permissions, cell: permissionsText },
 					]}
 					emptyText={t.roles.empty}
