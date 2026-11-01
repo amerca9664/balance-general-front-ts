@@ -12,6 +12,7 @@ import { useTranslation } from "./LanguageProvider";
 const modules = [
 	{ path: "/balancegeneral", label: "balanceGeneral" },
 	{ path: "/usuarios", label: "users" },
+	{ path: "/roles", label: "roles" },
 ] as const;
 
 export const Sidebar = () => {

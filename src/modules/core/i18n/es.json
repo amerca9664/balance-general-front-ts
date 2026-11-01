@@ -38,7 +38,8 @@
 		"open": "Módulos",
 		"close": "Cerrar",
 		"balanceGeneral": "Balance General",
-		"users": "Usuarios"
+		"users": "Usuarios",
+		"roles": "Roles"
 	},
 	"users": {
 		"title": "Usuarios",
@@ -61,6 +62,29 @@
 		"deleted": "Usuario eliminado",
 		"errorTitle": "No se pudo completar la acción",
 		"invalidData": "Revisa los datos: nombre de 3+ caracteres, email válido y contraseña de 6+ caracteres"
+	},
+	"roles": {
+		"title": "Roles",
+		"createTitle": "Nuevo rol",
+		"editTitle": "Editar rol",
+		"name": "Nombre",
+		"userType": "Tipo de usuario",
+		"permissions": "Permisos",
+		"read": "Lectura",
+		"write": "Escritura",
+		"create": "Crear rol",
+		"save": "Guardar cambios",
+		"cancel": "Cancelar",
+		"edit": "Editar",
+		"delete": "Eliminar",
+		"actions": "Acciones",
+		"empty": "Todavía no hay roles. Crea el primero.",
+		"confirmDelete": "¿Eliminar el rol {name}? No se puede deshacer.",
+		"created": "Rol creado",
+		"updated": "Cambios guardados",
+		"deleted": "Rol eliminado",
+		"errorTitle": "No se pudo completar la acción",
+		"invalidData": "Revisa los datos: nombre de 2+ caracteres y un tipo de usuario válido"
 	},
 	"errors": {
 		"noConnection": "No fue posible conectar con el servidor",
