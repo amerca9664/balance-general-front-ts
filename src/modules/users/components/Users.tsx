@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Plus, X } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { sileo } from "sileo";
 import { useAuth } from "../../core/components/AuthProvider";
@@ -7,6 +7,7 @@ import { DataTable } from "../../core/components/DataTable";
 import { GeneralButton } from "../../core/components/GeneralButton";
 import { GeneralInputText } from "../../core/components/GeneralInputText";
 import { useTranslation } from "../../core/components/LanguageProvider";
+import { MultiSelect } from "../../core/components/MultiSelect";
 import { SideModal } from "../../core/components/SideModal";
 import { listRolesApi } from "../../roles/apis/rolesApi";
 import type { Role } from "../../roles/types/roleTypes";
@@ -71,9 +72,6 @@ export const Users = () => {
 			.filter((role) => user.roles.includes(role._id))
 			.map((role) => role.name)
 			.join(", ") || "—";
-
-	const assignedRoles = allRoles.filter((role) => roleIds.includes(role._id));
-	const availableRoles = allRoles.filter((role) => !roleIds.includes(role._id));
 
 	const resetForm = () => {
 		setModalOpen(false);
@@ -181,50 +179,14 @@ export const Users = () => {
 							typeInput="password"
 						/>
 						{allRoles.length > 0 && (
-							<div className="flex flex-col gap-2">
-								<label className="flex flex-col gap-1">
-									<span className="text-sm">{t.users.roles}</span>
-									{/* Elegir una opcion la agrega y el select vuelve al placeholder. */}
-									<select
-										value=""
-										disabled={availableRoles.length === 0}
-										onChange={(e) => setRoleIds([...roleIds, e.target.value])}
-										className="p-2 rounded-md border border-gray-300 bg-white dark:border-gray-600 dark:bg-gray-700 focus-visible:outline-2 focus-visible:outline-blue-400"
-									>
-										<option value="" disabled>
-											{t.users.addRole}
-										</option>
-										{availableRoles.map((role) => (
-											<option key={role._id} value={role._id}>
-												{role.name}
-											</option>
-										))}
-									</select>
-								</label>
-								{assignedRoles.length > 0 && (
-									<ul className="flex flex-wrap gap-2">
-										{assignedRoles.map((role) => (
-											<li
-												key={role._id}
-												className="flex items-center gap-1 rounded-full bg-blue-100 text-blue-900 dark:bg-blue-900 dark:text-blue-100 pl-3 pr-1 py-0.5 text-sm"
-											>
-												{role.name}
-												<button
-													type="button"
-													onClick={() =>
-														setRoleIds(roleIds.filter((id) => id !== role._id))
-													}
-													aria-label={`${t.users.removeRole} ${role.name}`}
-													title={t.users.removeRole}
-													className="p-0.5 rounded-full hover:bg-blue-200 dark:hover:bg-blue-800 hover:cursor-pointer focus-visible:outline-2 focus-visible:outline-blue-400"
-												>
-													<X className="size-4" />
-												</button>
-											</li>
-										))}
-									</ul>
-								)}
-							</div>
+							<MultiSelect
+								label={t.users.roles}
+								addLabel={t.users.addRole}
+								removeLabel={t.users.removeRole}
+								options={allRoles}
+								value={roleIds}
+								onChange={setRoleIds}
+							/>
 						)}
 						<div className="flex gap-2">
 							<GeneralButton

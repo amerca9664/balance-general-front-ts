@@ -10,6 +10,7 @@ import { ThemeProvider } from "./modules/core/components/ThemeProvider";
 import { ThemeSelector } from "./modules/core/components/ThemeSelector";
 import { Departments } from "./modules/departments/components/Departments";
 import { Roles } from "./modules/roles/components/Roles";
+import { AccessRoutes } from "./modules/routes/components/AccessRoutes";
 import { Users } from "./modules/users/components/Users";
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
 								<Route path="/usuarios" element={<Users />} />
 								<Route path="/roles" element={<Roles />} />
 								<Route path="/departamentos" element={<Departments />} />
+								<Route path="/rutas" element={<AccessRoutes />} />
 							</Route>
 						</Routes>
 					</AuthProvider>

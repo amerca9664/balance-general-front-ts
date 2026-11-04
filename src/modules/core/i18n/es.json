@@ -40,7 +40,8 @@
 		"balanceGeneral": "Balance General",
 		"users": "Usuarios",
 		"roles": "Roles",
-		"departments": "Departamentos"
+		"departments": "Departamentos",
+		"routes": "Rutas"
 	},
 	"users": {
 		"title": "Usuarios",
@@ -110,6 +111,32 @@
 		"deleted": "Departamento eliminado",
 		"errorTitle": "No se pudo completar la acción",
 		"invalidData": "Revisa los datos: nombre de 2+ caracteres"
+	},
+	"routes": {
+		"title": "Rutas",
+		"editTitle": "Editar ruta",
+		"name": "Ruta",
+		"module": "Módulo",
+		"selectModule": "Elige un módulo",
+		"roles": "Roles con acceso",
+		"addRole": "Agregar rol",
+		"removeRole": "Quitar",
+		"save": "Guardar cambios",
+		"cancel": "Cancelar",
+		"edit": "Editar",
+		"delete": "Eliminar",
+		"actions": "Acciones",
+		"empty": "Todavía no hay rutas guardadas. Crea la primera.",
+		"confirmDelete": "¿Eliminar la ruta {name}? Nadie podrá usar ese endpoint hasta crearla de nuevo.",
+		"created": "Ruta creada",
+		"updated": "Cambios guardados",
+		"deleted": "Ruta eliminada",
+		"errorTitle": "No se pudo completar la acción",
+		"invalidData": "Revisa los datos: ruta y módulo son obligatorios",
+		"createTitle": "Nueva ruta",
+		"create": "Crear ruta",
+		"selectName": "Elige una ruta del back",
+		"taken": "ya guardada"
 	},
 	"errors": {
 		"noConnection": "No fue posible conectar con el servidor",

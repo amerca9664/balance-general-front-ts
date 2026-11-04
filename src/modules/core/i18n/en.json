@@ -40,7 +40,8 @@
 		"balanceGeneral": "Balance Sheet",
 		"users": "Users",
 		"roles": "Roles",
-		"departments": "Departments"
+		"departments": "Departments",
+		"routes": "Routes"
 	},
 	"users": {
 		"title": "Users",
@@ -110,6 +111,32 @@
 		"deleted": "Department deleted",
 		"errorTitle": "Could not complete the action",
 		"invalidData": "Check the data: name with 2+ characters"
+	},
+	"routes": {
+		"title": "Routes",
+		"editTitle": "Edit route",
+		"name": "Route",
+		"module": "Module",
+		"selectModule": "Choose a module",
+		"roles": "Roles with access",
+		"addRole": "Add role",
+		"removeRole": "Remove",
+		"save": "Save changes",
+		"cancel": "Cancel",
+		"edit": "Edit",
+		"delete": "Delete",
+		"actions": "Actions",
+		"empty": "No saved routes yet. Create the first one.",
+		"confirmDelete": "Delete route {name}? Nobody can use that endpoint until it is created again.",
+		"created": "Route created",
+		"updated": "Changes saved",
+		"deleted": "Route deleted",
+		"errorTitle": "Could not complete the action",
+		"invalidData": "Check the data: route and module are required",
+		"createTitle": "New route",
+		"create": "Create route",
+		"selectName": "Choose a back route",
+		"taken": "already saved"
 	},
 	"errors": {
 		"noConnection": "Could not connect to the server",

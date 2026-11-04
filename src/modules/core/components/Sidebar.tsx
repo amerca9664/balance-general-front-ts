@@ -3,18 +3,11 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { NavLink, Outlet } from "react-router";
 import { sileo } from "sileo";
+import { modules } from "../helpers/modules";
 import { logOutWithRetry } from "../helpers/pendingLogout";
 import { useAuth } from "./AuthProvider";
 import { GeneralButton } from "./GeneralButton";
 import { useTranslation } from "./LanguageProvider";
-
-// Para agregar un modulo: una entrada aqui, su <Route> en App.tsx y su texto en i18n "modules".
-const modules = [
-	{ path: "/balancegeneral", label: "balanceGeneral" },
-	{ path: "/usuarios", label: "users" },
-	{ path: "/roles", label: "roles" },
-	{ path: "/departamentos", label: "departments" },
-] as const;
 
 export const Sidebar = () => {
 	const { t } = useTranslation();
